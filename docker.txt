@@ -1,0 +1,386 @@
+Docker :
+======================
+
+Develop :	Build     :    Deploy 
+Code    :      .jar/.war  :    Place it in server and run
+
+Deployment : It is a process of setting all required software and starting application under one
+runtime environment
+
+What is Runtime Environment?
+=================================
+=>Runtime Environment is Operating System and it is  Platform Dependent
+=>It means softwares required to run our application are fully os dependent
+
+Example : Java S/W , Tomcat Server,Mysql D/B etc
+
+=>Our application is working fine in DevMachine(example : windows platform),may or may not 
+  work properly in other platforms ( ex: Linux,Mac ...)
+
+=>So,Solution is Do Not Run Our Applications/Services on Direct OS ( Windows/Linix/Mac etc)
+=>Use Virtual Platform that supports to run application anywhere
+  (no version or no installer modification required)
+
+jar : Java Application Archieve : Group all.class files into single unit
+>java -jar filename.jar
+
+
+
+*******************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+Docker :
+=================
+* Docker is the world’s leading software container platform
+* Docker is a tool designed to make it easier to build,deploy and run applications by using
+  containers
+* Docker makes the process of application deployment very easy and efficient and resolves a lot of 
+  issues related to deploying applications
+* Docker gives you a standard way of packaging your application with all its dependencies 
+  in a container 
+* Containers allow a developer to package up an application with all of the parts it needs, such as 
+  libraries and other dependencies, and ship it all out as one package. 
+* Everything in Docker is an Image
+
+
+image : jar file
+class  : Blue Print          : Image
+object : Instance of a class : Container
+
+
+Docker Container : Executing all required Images in Docker ,then one runtime setup is created 
+		   which is called as Container
+
+=>Once Docker Image is created then we are going to place our image inside DockerHub
+  (hub.docker.com) by using actions like PUSH and PULL.
+
+
+Dockerfile :
+------------------
+* A text file with instructions to build image
+* Automation of Docker Image Creation
+
+Step 1 : Create a file named Dockerfile
+Step 2 : Add instructions in Dockerfile
+Step 3 : Build dockerfile to create image
+Step 4 : Run image to create container
+
+****************************************************************
+FROM openjdk:8
+EXPOSE 8080
+ADD target/jar-file-name.jar jar-file-name.jar
+ENTRYPOINT ["java","-jar","/jar-file-name.jar"] 
+****************************************************************
+
+
+Important Docker Commands:
+=================================
+
+* docker images : To see list of docker images
+===================================================================
+
+* docker build  -t <image_name>:<tag> locationOfDockerFile
+  Ex: docker build  -t customer-management-system
+===================================================================
+
+* docker run --name <container_name> -p <maskedPort>:<actualPort> <image_name>
+* docker run --name <container_name> -d -p <maskedPort>:<actualPort> <image_name> : Daemon Mode
+
+===================================================================
+
+* docker logs <container-name>
+===================================================================
+
+* docker tag <image> <username>/<repository>:<tagName>
+===================================================================
+
+# Pushing To Docker Hub
+* docker push <username>/<repository>:<tagName>
+===================================================================
+
+# Pulling From Docker Hub
+* docker pull <username>/<repository>:<tagName>
+===================================================================
+>docker stop <container-name>
+              or
+>docker stop <containerid>		: To Stop Running Docker Container
+
+>docker ps				: To list running Docker containers,
+>docker ps -a                           : List All Docker Containers
+>docker rm <container>                  : Remove Docker container by CONTAINER ID or NAME
+>docker rm -f <container>		: Force removal of a running Docker container
+>docker container prune -f		: Remove all stopped (unused) Docker containers
+>docker rmi <image-name>:tag		: To Remove an image
+>docker network ls
+
+
+
+..................................................................................................
+
+1)Create one Account in DockerHub (Register and Login)
+  http://hub.docker.com
+2)Write One Spring Boot Application
+3)Create Docker File in our application
+4)Download and install Docker software in our system
+5)Start Docker Software and run docker commands
+  a)Creating Docker Images
+  b)Check other Images
+  c)Run Image as Container
+  d)Login to DockerHub
+  e)PUSH or PULL with DockerHub
+
+--------------------------------------------------------------------------------------------
+
+What is Docker Compose?
+==============================
+* It is a tool for defining & running multi-container docker applications
+* Use yaml files to configure application services (docker-compose.yml)
+* Can start all services with a single command 
+* Can stop all services with a single command
+* Can scale up selected services when required
+
+* When we install docker in our machine ,automatically docker-compose tool will be installed
+  >docker-compose -v
+  >docker-compose version
+
+* We can also install docker using pip
+  >pip install -U docker-compose
+
+* Create docker compose file at any location on your system
+  >docker-compose.yml
+
+******************************************************************
+
+version : '3'
+services:
+  web:
+    image: nginx
+    ports: 
+     - 9090:80
+  database:
+    image: mysql
+
+*******************************************************************
+
+* Check the validity of file by command
+  >docker-compose config
+
+* Run docker-compose.yml file by command
+  >docker-compose up -d
+
+* Bring down application by command
+  >docker-compose down
+
+ How to scale services
+  >docker-compose up -d --scale database=4
+
+
+
+
+
+How do containers communicate?
+* Two containers can talk to each other in one of two ways, usually:
+
+  1)Communicating through networking: Containers are designed to be isolated. 
+    But they can send and receive requests to other applications, using networking.
+    For example: a web server container might expose a port, so that it can receive requests on port 80.
+    Or an application container might make a connection to a database container.
+
+  2)Sharing files on disk: Some applications communicate by reading and writing files. These kinds of
+    applications can communicate by writing their files into a volume, which can also be shared with 
+    other containers.
+    For example: a data processing application might write a file to a shared volume which contains 
+    customer data, which is then read by another application. Or, two identical containers might even 
+    share the same files.
+
+Communication between containers with networking
+========================================================
+* Most container-based applications talk to each other using networking. This basically means that an
+  application running in one container will create a network connection to a port on another container.
+* With Docker, container-to-container communication is usually done using a virtual network.
+
+Building your (Virtual) Network
+===================================
+* If you are running more than one container, you can let your containers communicate with each other
+  by attaching them to the same network.
+* Docker creates virtual networks which let your containers talk to each other. 
+* In a network, a container has an IP address, and optionally a hostname.
+* A Docker network lets your containers communicate with each other
+* You can create different types of networks depending on what you would like to do
+
+
+1)The default bridge network : Which allows simple container-to-container communication by IP address,
+  and is created by default.
+
+2)A user-defined bridge network : Which you create yourself, and allows your containers to communicate
+  with each other, by using their container name as a hostname.
+
+
+* A bridge network gives you simple communication between containers on the same host
+* When Docker starts up, it will create a default network called… bridge.It should start automatically,
+  without any configuration required by you.
+* In a bridge network, each container is assigned its own IP address. So containers can communicate with 
+  each other by IP
+ 
+  >docker network ls : To list currently available network on the docker host.
+
+  >docker network create [network-name]
+  >docker network create -d [network_type] [network_name] : To Create Bridge Network On Your System
+   Ex: docker network create -d bridge my-bridge-network
+
+Connect Container to Network
+==================================
+* You can connect any container to an existing docker network by using containers name or ID. 
+* Once the container connected to the network, it can communicate with other containers in the same 
+  network.
+
+  >docker network connect [network_name] [container_name]
+
+Disconnect Container from Network
+==================================
+* You can disconnect a container from the specific network any time using the following command
+  
+  >docker network disconnect [network_name] [container_name]
+
+Inspect a Docker Network
+===================================
+* Use inspect option with docker network comment to view the details of docker network
+
+  >docker network inspect [network-name]
+
+
+Remove a Docker Network
+===================================
+* Use rm option to remove any existing unused Docker network. You can specify one or more networks
+  with space separated to remove.
+
+  >docker network rm [network-name-1] [network-name-2] [network-name-3]
+
+* You can also remove all unused networks from docker host using prune option.
+  
+  >docker network prune
+
+=================================================================================
+
+>docker run --name <container-name> -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=test 
+-e  MYSQL_PASSWORD=password -d mysql
+
+>docker container logs -f <container-name>
+>docker container  exec -it  <container-name> bash
+
+For MySQL:
+**********************************
+>mysql -u<username> -p<password>
+**********************************
+
+For PostgreSQL:
+**********************************
+>psql -U <dataBaseUserName> <dataBaseName>
+
+====================================================================================
+
+docker-compose.yml
+========================================================
+version: '3'
+services:
+  mysql_db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: test
+      MYSQL_ROOT_PASSWORD: password
+  bms_app:
+    image: bms
+    ports:
+      - 9090:8080
+    depends_on:
+      - mysql_db
+
+    
+
+
+============================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Amazon ECS [Elastic Container Service]:
+========================================
+* ECS is a fully managed container orchestration service
+
+Aws Fargate:
+====================
+* AWS Fargate is a serverless compute engine for containers that works with ECS and it allow you
+  to run containers without having provision,configure and scaling
+* Eliminates the need of EC2 Instance
+
+
+
+
+
+
+
+
+
+.......................................................................
+Access key ID	   : 
+Secret access key  : ......
+
+Custom Policy :
+=========================================================================
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect":"Allow",
+            "Action":["dynamodb:PutItem"],
+            "Resource":["*"]
+        },
+        {
+            "Effect":"Allow",
+            "Action":["sns:Publish"],
+            "Resource":["*"]
+        }
+        ]
+}
+
+================================================================================
+
+
+
+
