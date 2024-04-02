@@ -39,7 +39,7 @@ jar : Java Application Archieve : Group all.class files into single unit
 
 Docker :
 =================
-* Docker is the world’s leading software container platform
+* Docker is the worldâ€™s leading software container platform
 * Docker is a tool designed to make it easier to build,deploy and run applications by using
   containers
 * Docker makes the process of application deployment very easy and efficient and resolves a lot of 
@@ -225,7 +225,7 @@ Building your (Virtual) Network
 
 
 * A bridge network gives you simple communication between containers on the same host
-* When Docker starts up, it will create a default network called… bridge.It should start automatically,
+* When Docker starts up, it will create a default network calledâ€¦ bridge.It should start automatically,
   without any configuration required by you.
 * In a bridge network, each container is assigned its own IP address. So containers can communicate with 
   each other by IP
@@ -359,6 +359,10 @@ Aws Fargate:
 .......................................................................
 Access key ID	   : 
 Secret access key  : ......
+
+
+
+aws ecr get-login-password --region <region-code> | docker login --username AWS --password-stdin <repository-url>
 
 Custom Policy :
 =========================================================================
